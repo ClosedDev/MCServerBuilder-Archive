@@ -20,7 +20,7 @@ MCSB의 설명을 한국어로 서술한 탭
 
 
 # 영어 / English
-an English-language document describing the MCSB's funcions
+an English document describing the MCSB's funcions
 
 # Planning functions
  - Create server
