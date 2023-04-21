@@ -1,18 +1,16 @@
 package io.github.closeddev;
 
+import io.github.closeddev.Server.CreateServer;
 import io.github.closeddev.Updater.VersionManager;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
 public class Main {
-    public static String appdata = System.getenv("APPDATA");
-    public static String MCSBPath = appdata + "/MCServerBuilder";
+    public static final String appdata = System.getenv("APPDATA");
+    public static final String MCSBPath = appdata + "/MCServerBuilder";
 
     public static JSONObject settings;
 
@@ -27,8 +25,19 @@ public class Main {
         Logger.log("MCSB v" + VersionManager.VER + " Copyright \u24d2 ClosedDev ( MIT LICENCE v2 )", 0);
         reloadSettings();
         Logger.log(settings.toString(), 0);
-        Logger.log(ApiManager.getLatestBuild("1.19.4"), 0);
-        Downloader.Download("https://speed.hetzner.de/100MB.bin", MCSBPath + "/Bin/1M.bin", "1MB Bin FILE");
+        String FullVersion = "1.19.4";
+        Logger.log(ApiManager.getLatestBuild(FullVersion), 0);
+        String bcode = ApiManager.getLatestBuild(FullVersion);
+        int vcodeint = Integer.valueOf(FullVersion.replaceAll("\\.", ""));
+        String vcode = null;
+        if(countChar(FullVersion, '.')<2) { vcode = String.valueOf(vcodeint*10); }
+        if(vcodeint>1000) {
+            vcode = String.valueOf(vcodeint - 1000);
+        } else {
+            vcode = "0" + String.valueOf(vcodeint - 100);
+        }
+        Logger.log(String.valueOf(vcode), 0);
+        CreateServer.createServer(FullVersion, bcode, vcode);
     }
 
     public static void reloadSettings() throws IOException {
@@ -54,5 +63,11 @@ public class Main {
                 Logger.log("An error occurred while creating the folder.", 1);
             }
         }
+    }
+
+    public static long countChar(String str, char ch) {
+        return str.chars()
+                .filter(c -> c == ch)
+                .count();
     }
 }
