@@ -11,12 +11,12 @@ import java.nio.file.Paths;
 
 public class CreateServer {
 
-    public static final String SERVERPATH = Main.MCSBPath + "/tempserver";
+    public static final String SERVERPATH = Main.MCSBPath + "/Temp/Jars";
     public static void createServer(String FullVersion, String Build, String vcode) throws InterruptedException, IOException {
         Main.makeDir(SERVERPATH);
         Path filename = Paths.get(Main.MCSBPath + "/Jars/P" + vcode + "-" + Build + ".jar");
         String paperurl = String.valueOf(new URL("https://api.papermc.io/v2/projects/paper/versions/" + FullVersion + "/builds/" + Build + "/downloads/paper-" + FullVersion + "-" + Build + ".jar"));
         Downloader.Download(paperurl, String.valueOf(filename), "Papermc server"); // Jars 폴더에 버킷 저장
-        Files.copy(filename, Path.of(SERVERPATH + "/paper.jar"));
+        Files.copy(filename, Paths.get(SERVERPATH + "/paper.jar"));
     }
 }
