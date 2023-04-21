@@ -22,7 +22,7 @@ public class Main {
 
     public static JSONObject settings;
 
-    public static void main(String[] args) throws IOException, InterruptedException, ParseException {
+    public static void main(String[] args) throws Exception {
         makeDir(MCSBPath + "/");
         makeDir(MCSBPath + "/Bin");
         makeDir(MCSBPath + "/Jars");
@@ -51,7 +51,7 @@ public class Main {
             CreateServer.createServer(FullVersion, bcode, vcode);
         }
         System.out.println(ApiManager.getMajorArray());
-        Logger.log(LangManager.getText("test", "ko-kr"), 0);
+//        Logger.log(LangManager.getText("test", "ko-kr"), 0);
     }
 
     public static void reloadSettings() throws IOException, InterruptedException, ParseException {
@@ -98,7 +98,7 @@ public class Main {
         }
     }
 
-    public static long countChar(String str, char ch) {
+    private static long countChar(String str, char ch) {
         return str.chars()
                 .filter(c -> c == ch)
                 .count();
