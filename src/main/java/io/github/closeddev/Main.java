@@ -12,10 +12,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.List;
+import java.util.regex.Pattern;
 
 public class Main {
     public static final String appdata = System.getenv("APPDATA");
     public static final String MCSBPath = appdata + "/MCServerBuilder";
+    public static List<String> jarFiles;
 
     public static JSONObject settings;
 
@@ -47,7 +50,7 @@ public class Main {
             Logger.log(String.valueOf(vcode), 0);
             CreateServer.createServer(FullVersion, bcode, vcode);
         }
-
+        System.out.println(ApiManager.getMajorArray());
         Logger.log(LangManager.getText("test", "ko-kr"), 0);
     }
 

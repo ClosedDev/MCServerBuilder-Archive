@@ -9,9 +9,53 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.ProtocolException;
 import java.net.URL;
+import java.util.List;
 
 public class ApiManager {
+    private static List<String> majorArray;
+    private static List<String> fullArray;
+
+    private static void reloadListVars() throws IOException, ParseException {
+        try {
+            // API 엔드포인트 URL 설정
+            URL url = new URL("https://api.papermc.io/v2/projects/paper");
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+
+
+            // 응답 받아오기
+            int responseCode = connection.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                String inputLine;
+                StringBuilder content = new StringBuilder();
+                while ((inputLine = in.readLine()) != null) {
+                    content.append(inputLine);
+                }
+                in.close();
+
+                // JSON 파싱
+                JSONParser parser = new JSONParser();
+                JSONObject jsonObject = (JSONObject) parser.parse(content.toString());
+                majorArray = (List<String>) jsonObject.get("version_groups");
+                fullArray = (List<String>) jsonObject.get("versions");
+            }
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    public static List<String> getFullArray() throws IOException, ParseException {
+        reloadListVars();
+        return fullArray;
+    }
+    public static List<String> getMajorArray() throws IOException, ParseException {
+        reloadListVars();
+        return majorArray;
+    }
+
     public static String getLatestBuild(String FullVersion) throws IOException, ParseException {
         String bcode = null;
         try {
