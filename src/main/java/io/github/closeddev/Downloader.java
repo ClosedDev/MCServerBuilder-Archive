@@ -21,7 +21,7 @@ public class Downloader {
         try(InputStream inputStream = url.openStream();
             CountingInputStream cis = new CountingInputStream(inputStream);
             FileOutputStream fileOS = new FileOutputStream(saveAt);
-            ProgressBar pb = new ProgressBar(filePresentName, Math.floorDiv(completeFileSize, 200)
+            ProgressBar pb = new ProgressBar(filePresentName, Math.floorDiv(completeFileSize, 1000)
             )) {
 
             pb.setExtraMessage("Downloading...");
@@ -35,10 +35,10 @@ public class Downloader {
             }).start();
 
             while (cis.getByteCount() < completeFileSize) {
-                pb.stepTo(Math.floorDiv(cis.getByteCount(), 200));
+                pb.stepTo(Math.floorDiv(cis.getByteCount(), 1000));
             }
 
-            pb.stepTo(Math.floorDiv(cis.getByteCount(), 200));
+            pb.stepTo(Math.floorDiv(cis.getByteCount(), 1000));
         }
     }
 }
