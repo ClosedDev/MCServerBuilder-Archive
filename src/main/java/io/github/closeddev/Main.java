@@ -31,11 +31,22 @@ public class Main {
         makeDir(MCSBPath + "/Jars");
         makeDir(MCSBPath + "/Logs");
 
+        reloadSettings(); //설정 리로드
+
         String LAST_VER = VersionManager.getVersionStr();
-        Boolean IsUpdateFound = VersionManager.checkUpdate(LAST_VER);
+        Boolean IsUpdateFound = false;
+        if ((Boolean) settings.get("AutoUpdateCheck")) {
+            IsUpdateFound = VersionManager.checkUpdate(LAST_VER);
+        }
         Logger.log("MCSB v" + VersionManager.VER + " Copyright \u24d2 ClosedDev ( MIT LICENCE v2 )", 0);
 
-        reloadSettings(); //설정 리로드
+        if(IsUpdateFound) {
+            Logger.log("New Update Found! v" + VersionManager.VER + " -> v" + LAST_VER, 2);
+            if ((Boolean) settings.get("AutoFileUpdate")) {
+                Logger.log("Updating MCSB...", 2);
+                Updater.updateMCSB(PROGRAM_PATH, LAST_VER);
+            }
+        }
 
         if((Boolean) settings.get("DebugMode")) {
             Logger.log("Debug Mode is Enabled!", 2);
