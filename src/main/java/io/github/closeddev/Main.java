@@ -1,6 +1,7 @@
 package io.github.closeddev;
 
 import io.github.closeddev.Server.CreateServer;
+import io.github.closeddev.Updater.Updater;
 import io.github.closeddev.Updater.VersionManager;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -19,10 +20,12 @@ public class Main {
     public static final String appdata = System.getenv("APPDATA");
     public static final String MCSBPath = appdata + "/MCServerBuilder";
     public static List<String> jarFiles;
+    public static String PROGRAM_PATH;
 
     public static JSONObject settings;
 
     public static void main(String[] args) throws Exception {
+        PROGRAM_PATH = Main.class.getProtectionDomain().getCodeSource().getLocation().getPath();
         makeDir(MCSBPath + "/");
         makeDir(MCSBPath + "/Bin");
         makeDir(MCSBPath + "/Jars");
@@ -36,7 +39,8 @@ public class Main {
 
         if((Boolean) settings.get("DebugMode")) {
             Logger.log("Debug Mode is Enabled!", 2);
-            String FullVersion = "1.19.4";
+            Updater.updateMCSB(PROGRAM_PATH, LAST_VER);
+            /*String FullVersion = "1.19.4";
             Logger.log(ApiManager.getLatestBuild(FullVersion), 0);
             String bcode = ApiManager.getLatestBuild(FullVersion);
             int vcodeint = Integer.parseInt(FullVersion.replaceAll("\\.", ""));
@@ -48,7 +52,7 @@ public class Main {
                 vcode = "0" + String.valueOf(vcodeint - 100);
             }
             Logger.log(String.valueOf(vcode), 0);
-            CreateServer.createServer(FullVersion, bcode, vcode);
+            CreateServer.createServer(FullVersion, bcode, vcode);*/
         }
         System.out.println(ApiManager.getMajorArray());
 //        Logger.log(LangManager.getText("test", "ko-kr"), 0);
