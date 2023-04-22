@@ -1,18 +1,9 @@
 package io.github.closeddev.Updater;
 
 import io.github.closeddev.Main;
-import org.apache.commons.io.IOUtils;
 
 import java.io.*;
-import java.net.MalformedURLException;
-import java.net.Socket;
 import java.net.URL;
-import java.net.UnknownHostException;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
 
 public class Updater {
     public static void updateMCSB(String programPath, String LAST_VER) throws IOException, InterruptedException {
@@ -59,7 +50,7 @@ public class Updater {
 
 
 
-        fw.write("@echo off\ntitle MCSBUpdater\njava -jar " + Main.MCSBPath + "/Bin/MCSBUpdater.jar " + Main.PROGRAM_PATH + " " + LAST_VER + "\npause\nexit");
+        fw.write("@echo off\ntitle MCSBUpdater\njava -jar " + Main.MCSBPath + "/Bin/MCSBUpdater.jar " + Main.PROGRAM_JAR_PATH + " " + LAST_VER + "\npause\nexit");
         fw.flush();
         fw.close();
 

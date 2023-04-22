@@ -1,7 +1,6 @@
 package io.github.closeddev.Updater;
 
 import io.github.closeddev.Logger;
-import io.github.closeddev.Main;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,7 +10,7 @@ import java.net.URLConnection;
 
 public class VersionManager {
 
-    public static final String VER = "0.0.1";
+    public static final String VER = "0.0.2";
 
     public static String getVersionStr() throws IOException, InterruptedException {
         String temp = null;

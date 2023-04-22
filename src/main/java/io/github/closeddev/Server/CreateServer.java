@@ -1,5 +1,6 @@
 package io.github.closeddev.Server;
 
+import io.github.closeddev.Class.SProperties;
 import io.github.closeddev.Downloader;
 import io.github.closeddev.JSONManager;
 import io.github.closeddev.Logger;
@@ -7,7 +8,10 @@ import io.github.closeddev.Main;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -65,7 +69,35 @@ public class CreateServer {
             }
             JSONManager.writeJSON(MCSBPath + "/versions.json", jsonObject);
             Files.copy(filename, Paths.get(SERVERPATH + "/paper.jar"));
+            crteula(SERVERPATH);
+            crtstart(SERVERPATH);
+            SProperties properties = new SProperties();
+
+
         } catch(Exception e) {
+            Logger.log(e.toString(), 1);
+        }
+    }
+    public static void crtstart(String svpath) {
+        File BatFile = new File(svpath + "/start.bat");
+        try {
+            FileWriter fw = new FileWriter(BatFile, true);
+            fw.write("@echo off\njava -jar paper.jar\npause\nexit");
+            fw.flush();
+            fw.close();
+        } catch (IOException e) {
+            Logger.log(e.toString(), 1);
+        }
+    }
+
+    public static void crteula(String svpath) {
+        File BatFile = new File(svpath + "eula.txt");
+        try {
+            FileWriter fw = new FileWriter(BatFile, true);
+            fw.write("eula=true");
+            fw.flush();
+            fw.close();
+        } catch (IOException e) {
             Logger.log(e.toString(), 1);
         }
     }

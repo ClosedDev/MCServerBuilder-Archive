@@ -14,18 +14,19 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.List;
-import java.util.regex.Pattern;
 
 public class Main {
     public static final String appdata = System.getenv("APPDATA");
     public static final String MCSBPath = appdata + "/MCServerBuilder";
     public static List<String> jarFiles;
-    public static String PROGRAM_PATH;
+    public static String PROGRAM_JAR_PATH, PROGRAM_PATH;
 
     public static JSONObject settings;
 
     public static void main(String[] args) throws Exception {
-        PROGRAM_PATH = Main.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+        PROGRAM_JAR_PATH = Main.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+        File PP = new File(PROGRAM_JAR_PATH);
+        PROGRAM_PATH = PP.getParent();
         makeDir(MCSBPath + "/");
         makeDir(MCSBPath + "/Bin");
         makeDir(MCSBPath + "/Jars");
@@ -44,14 +45,13 @@ public class Main {
             Logger.log("New Update Found! v" + VersionManager.VER + " -> v" + LAST_VER, 2);
             if ((Boolean) settings.get("AutoFileUpdate")) {
                 Logger.log("Updating MCSB...", 2);
-                Updater.updateMCSB(PROGRAM_PATH, LAST_VER);
+                Updater.updateMCSB(PROGRAM_JAR_PATH, LAST_VER);
             }
         }
 
         if((Boolean) settings.get("DebugMode")) {
             Logger.log("Debug Mode is Enabled!", 2);
-            Updater.updateMCSB(PROGRAM_PATH, LAST_VER);
-            /*String FullVersion = "1.19.4";
+            String FullVersion = "1.19.4";
             Logger.log(ApiManager.getLatestBuild(FullVersion), 0);
             String bcode = ApiManager.getLatestBuild(FullVersion);
             int vcodeint = Integer.parseInt(FullVersion.replaceAll("\\.", ""));
@@ -63,9 +63,10 @@ public class Main {
                 vcode = "0" + String.valueOf(vcodeint - 100);
             }
             Logger.log(String.valueOf(vcode), 0);
-            CreateServer.createServer(FullVersion, bcode, vcode);*/
+            CreateServer.createServer(FullVersion, bcode, vcode);
         }
-        System.out.println(ApiManager.getMajorArray());
+        System.out.println(Main.PROGRAM_JAR_PATH);
+        System.out.println(Main.PROGRAM_PATH);
 //        Logger.log(LangManager.getText("test", "ko-kr"), 0);
     }
 
