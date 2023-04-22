@@ -11,7 +11,7 @@ import java.net.URLConnection;
 
 public class VersionManager {
 
-    public static final String VER = "0.0.1";
+    public static final String VER = "0.0.0";
 
     public static String getVersionStr() throws IOException, InterruptedException {
         String temp = null;

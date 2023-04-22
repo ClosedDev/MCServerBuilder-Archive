@@ -23,6 +23,14 @@ public class Updater {
         if(file.exists()){
             file.delete();
         }
+        File file2 = new File(Main.MCSBPath + "/Temp/Updater.bat");
+        if(file2.exists()){
+            file2.delete();
+        }
+        File file3 = new File(Main.MCSBPath + "/Temp/MCSB.jar");
+        if(file3.exists()){
+            file3.delete();
+        }
 
         BufferedInputStream in = null;
         FileOutputStream fout = null;
@@ -48,6 +56,9 @@ public class Updater {
         System.out.println("Starting MCSB Updater!");
         File BatFile = new File(Main.MCSBPath + "/Temp/Updater.bat");
         FileWriter fw = new FileWriter(BatFile, true);
+
+
+
         fw.write("@echo off\ntitle MCSBUpdater\njava -jar " + Main.MCSBPath + "/Bin/MCSBUpdater.jar " + Main.PROGRAM_PATH + " " + LAST_VER + "\npause\nexit");
         fw.flush();
         fw.close();
