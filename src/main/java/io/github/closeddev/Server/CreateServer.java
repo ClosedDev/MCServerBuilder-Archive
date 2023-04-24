@@ -1,6 +1,5 @@
 package io.github.closeddev.Server;
 
-import io.github.closeddev.Class.SProperties;
 import io.github.closeddev.Downloader;
 import io.github.closeddev.JSONManager;
 import io.github.closeddev.Logger;
@@ -23,7 +22,7 @@ import static io.github.closeddev.Main.MCSBPath;
 public class CreateServer {
 
     public static final String SERVERPATH = MCSBPath + "/Temp/testserver";
-    public static void createServer(String FullVersion, String Build, String vcode) {
+    public static void createServer(String FullVersion, String Build, String vcode, int ramAmount) {
         try {
             Main.makeDir(SERVERPATH);
 
@@ -70,27 +69,27 @@ public class CreateServer {
             JSONManager.writeJSON(MCSBPath + "/versions.json", jsonObject);
             Files.copy(filename, Paths.get(SERVERPATH + "/paper.jar"));
             crteula(SERVERPATH);
-            crtstart(SERVERPATH);
-            SProperties properties = new SProperties();
+            crtstart(SERVERPATH, ramAmount);
 
 
         } catch(Exception e) {
             Logger.log(e.toString(), 1);
         }
     }
-    public static void crtstart(String svpath) {
+    private static void crtstart(String svpath, float ramAmount) {
         File BatFile = new File(svpath + "/start.bat");
         try {
             FileWriter fw = new FileWriter(BatFile, true);
-            fw.write("@echo off\njava -jar paper.jar\npause\nexit");
+            fw.write("@echo off\njava -" + "Xms" + ramAmount + "G -Xmx" + ramAmount + "G -jar paper.jar\npause\nexit");
             fw.flush();
             fw.close();
+            System.out.println("@echo off\njava -" + "Xms" + ramAmount + "G -Xmx" + ramAmount + "G -jar paper.jar\npause\nexit");
         } catch (IOException e) {
             Logger.log(e.toString(), 1);
         }
     }
 
-    public static void crteula(String svpath) {
+    private static void crteula(String svpath) {
         File BatFile = new File(svpath + "eula.txt");
         try {
             FileWriter fw = new FileWriter(BatFile, true);
@@ -100,5 +99,19 @@ public class CreateServer {
         } catch (IOException e) {
             Logger.log(e.toString(), 1);
         }
+    }
+
+    public static void crtproper(JSONObject properties) {
+        String configPath = Main.PROGRAM_PATH + "/server.properties";
+        File config = new File(configPath);
+        if (!config.isFile()) {
+            try {
+                config.createNewFile();
+            } catch (IOException e) {
+                Logger.log("Failed to create server.properties File!", 1);
+            }
+        }
+
+        ServerManager.editProperties(configPath, "enable-command-block", true);
     }
 }

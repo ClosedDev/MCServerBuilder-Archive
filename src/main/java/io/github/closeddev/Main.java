@@ -1,8 +1,11 @@
 package io.github.closeddev;
 
+import io.github.closeddev.Plugins.PluginManager;
 import io.github.closeddev.Server.CreateServer;
+import io.github.closeddev.Server.ServerManager;
 import io.github.closeddev.Updater.Updater;
 import io.github.closeddev.Updater.VersionManager;
+
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -20,6 +23,7 @@ public class Main {
     public static final String MCSBPath = appdata + "/MCServerBuilder";
     public static List<String> jarFiles;
     public static String PROGRAM_JAR_PATH, PROGRAM_PATH;
+    public static Boolean isServerCreated;
 
     public static JSONObject settings;
 
@@ -27,6 +31,9 @@ public class Main {
         PROGRAM_JAR_PATH = Main.class.getProtectionDomain().getCodeSource().getLocation().getPath();
         File PP = new File(PROGRAM_JAR_PATH);
         PROGRAM_PATH = PP.getParent();
+
+        isServerCreated = ServerManager.isServerSet();
+
         makeDir(MCSBPath + "/");
         makeDir(MCSBPath + "/Bin");
         makeDir(MCSBPath + "/Jars");
@@ -49,25 +56,33 @@ public class Main {
             }
         }
 
+        ServerManager.editProperties(PROGRAM_PATH + "/server.properties", "enable-command-block", true);
+
         if((Boolean) settings.get("DebugMode")) {
             Logger.log("Debug Mode is Enabled!", 2);
             String FullVersion = "1.19.4";
+
             Logger.log(ApiManager.getLatestBuild(FullVersion), 0);
+
             String bcode = ApiManager.getLatestBuild(FullVersion);
             int vcodeint = Integer.parseInt(FullVersion.replaceAll("\\.", ""));
             String vcode = null;
-            if(countChar(FullVersion, '.')<2) { vcode = String.valueOf(vcodeint*10); }
+
+            if(countChar(FullVersion, '.')<2) vcode = String.valueOf(vcodeint * 10);
+
             if(vcodeint>1000) {
                 vcode = String.valueOf(vcodeint - 1000);
             } else {
                 vcode = "0" + String.valueOf(vcodeint - 100);
             }
+
             Logger.log(String.valueOf(vcode), 0);
-            CreateServer.createServer(FullVersion, bcode, vcode);
+            CreateServer.createServer(FullVersion, bcode, vcode, 4);
         }
-        System.out.println(Main.PROGRAM_JAR_PATH);
-        System.out.println(Main.PROGRAM_PATH);
-//        Logger.log(LangManager.getText("test", "ko-kr"), 0);
+//        Logger.log(LangManager.getText("test", "ko-kr"), 0); // 언어매니저 테스트용 주석
+        Logger.log("Starting MCSB!", 0);
+        System.out.println(PROGRAM_PATH);
+        System.out.println(PluginManager.getPluginList(PROGRAM_PATH + "/plugins"));
     }
 
     public static void reloadSettings() throws IOException, InterruptedException, ParseException {

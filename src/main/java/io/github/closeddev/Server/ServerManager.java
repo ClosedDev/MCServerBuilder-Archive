@@ -8,7 +8,7 @@ import java.io.File;
 
 public class ServerManager {
     public static boolean isServerSet() {
-        File f = new File(Main.PROGRAM_PATH + "world");
+        File f = new File(Main.PROGRAM_PATH + "/world");
         return f.isDirectory();
     }
 
