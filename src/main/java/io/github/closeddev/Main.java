@@ -1,5 +1,6 @@
 package io.github.closeddev;
 
+import io.github.closeddev.Menu.MainMenu;
 import io.github.closeddev.Plugins.PluginManager;
 import io.github.closeddev.Server.CreateServer;
 import io.github.closeddev.Server.ServerManager;
@@ -22,7 +23,7 @@ public class Main {
     public static final String appdata = System.getenv("APPDATA");
     public static final String MCSBPath = appdata + "/MCServerBuilder";
     public static List<String> jarFiles;
-    public static String PROGRAM_JAR_PATH, PROGRAM_PATH;
+    public static String PROGRAM_JAR_PATH, PROGRAM_PATH, Language;
     public static Boolean isServerCreated;
 
     public static JSONObject settings;
@@ -41,12 +42,15 @@ public class Main {
 
         reloadSettings(); //설정 리로드
 
+        Language = (String) settings.get("Language");
+
         String LAST_VER = VersionManager.getVersionStr();
         Boolean IsUpdateFound = false;
         if ((Boolean) settings.get("AutoUpdateCheck")) {
             IsUpdateFound = VersionManager.checkUpdate(LAST_VER);
         }
         Logger.log("MCSB v" + VersionManager.VER + " Copyright \u24d2 ClosedDev ( MIT LICENCE v2 )", 0);
+        Logger.log("Starting MCSB...", 0);
 
         if(IsUpdateFound) {
             Logger.log("New Update Found! v" + VersionManager.VER + " -> v" + LAST_VER, 2);
@@ -55,8 +59,6 @@ public class Main {
                 Updater.updateMCSB(PROGRAM_JAR_PATH, LAST_VER);
             }
         }
-
-        ServerManager.editProperties(PROGRAM_PATH + "/server.properties", "enable-command-block", true);
 
         if((Boolean) settings.get("DebugMode")) {
             Logger.log("Debug Mode is Enabled!", 2);
@@ -79,10 +81,9 @@ public class Main {
             Logger.log(String.valueOf(vcode), 0);
             CreateServer.createServer(FullVersion, bcode, vcode, 4);
         }
-//        Logger.log(LangManager.getText("test", "ko-kr"), 0); // 언어매니저 테스트용 주석
-        Logger.log("Starting MCSB!", 0);
-        System.out.println(PROGRAM_PATH);
-        System.out.println(PluginManager.getPluginList(PROGRAM_PATH + "/plugins"));
+//        Logger.log(LangManager.getText("test", "ko-kr"), 0); // 언어매니저 테스트
+        Logger.log("Entering MainMenu...", 0);
+        MainMenu.startMenu();
     }
 
     public static void reloadSettings() throws IOException, InterruptedException, ParseException {
@@ -98,7 +99,7 @@ public class Main {
         }
         settings = JSONManager.loadJSON(MCSBPath + "/setting.json");
 
-        File langfile = new File(MCSBPath + "/lang.json");
+        /*File langfile = new File(MCSBPath + "/lang.json");
         if (!langfile.isFile()) {
             StringBuilder langStr = new StringBuilder();
             URL url = new URL("https://pastebin.com/raw/bDgywSwi");
@@ -116,7 +117,7 @@ public class Main {
             JSONParser parser = new JSONParser();
             JSONObject langObj = (JSONObject) parser.parse(langStr.toString());
             JSONManager.writeJSON(MCSBPath + "/lang.json", langObj);
-        }
+        }*/
     }
 
     public static void makeDir(String path) throws InterruptedException {

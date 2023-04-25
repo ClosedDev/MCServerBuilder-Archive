@@ -17,7 +17,7 @@ public class LangManager {
             langData = (JSONObject) parser.parse(reader);
             reader.close();
         } catch (IOException | ParseException e) {
-            e.printStackTrace();
+            Logger.log(e.toString(), 1);
         }
     }
 

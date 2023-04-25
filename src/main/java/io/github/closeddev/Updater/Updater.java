@@ -1,6 +1,8 @@
 package io.github.closeddev.Updater;
 
+import io.github.closeddev.Logger;
 import io.github.closeddev.Main;
+
 
 import java.io.*;
 import java.net.URL;
@@ -35,7 +37,7 @@ public class Updater {
                 fout.write(data, 0, count);
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            Logger.log(e.toString(), 1);
         } finally {
             if (in != null) {
                 in.close();

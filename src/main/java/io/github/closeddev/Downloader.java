@@ -30,7 +30,7 @@ public class Downloader {
                 try {
                     IOUtils.copyLarge(cis, fileOS);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Logger.log(e.toString(), 1);
                 }
             }).start();
 
@@ -39,6 +39,8 @@ public class Downloader {
             }
 
             pb.stepTo(Math.floorDiv(cis.getByteCount(), 1000));
+        } catch (Exception e) {
+            Logger.log(e.toString(), 1);
         }
     }
 }

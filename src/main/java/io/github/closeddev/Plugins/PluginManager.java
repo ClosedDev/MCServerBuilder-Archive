@@ -1,6 +1,7 @@
 package io.github.closeddev.Plugins;
 
 import io.github.closeddev.Downloader;
+import io.github.closeddev.Logger;
 import io.github.closeddev.Server.ServerManager;
 
 import java.io.File;
@@ -35,7 +36,7 @@ public class PluginManager {
         try {
             Downloader.Download(url, path + "/Plugins/" + filename ,filename);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            Logger.log(e.toString(), 1);
         }
     }
 }

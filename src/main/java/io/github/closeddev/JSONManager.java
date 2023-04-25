@@ -9,11 +9,11 @@ import java.io.*;
 public class JSONManager {
     public static JSONObject loadJSON(String filepath) {
         JSONParser parser = new JSONParser();
-        JSONObject jsonObject;
+        JSONObject jsonObject = null;
         try (Reader reader = new FileReader(filepath)) {
              jsonObject = (JSONObject) parser.parse(reader);
         } catch (IOException | ParseException e) {
-            throw new RuntimeException(e);
+            Logger.log(e.toString(), 1);
         }
         return jsonObject;
     }

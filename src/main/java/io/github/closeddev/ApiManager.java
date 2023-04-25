@@ -43,7 +43,7 @@ public class ApiManager {
                 fullArray = (List<String>) jsonObject.get("versions");
             }
         } catch (Exception e) {
-            throw e;
+            Logger.log(e.toString(), 1);
         }
     }
 
@@ -86,7 +86,7 @@ public class ApiManager {
                 bcode = lastBuild.toString();
             }
         } catch (Exception e) {
-            throw e;
+            Logger.log(e.toString(), 1);
         }
         return bcode;
     }

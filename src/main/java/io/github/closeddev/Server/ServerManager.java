@@ -1,5 +1,6 @@
 package io.github.closeddev.Server;
 
+import io.github.closeddev.Logger;
 import io.github.closeddev.Main;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
@@ -18,7 +19,7 @@ public class ServerManager {
             conf.setProperty(key, value);
             conf.save();
         } catch (ConfigurationException e) {
-            throw new RuntimeException(e);
+            Logger.log(e.toString(), 1);
         }
     }
 }

@@ -7,7 +7,6 @@ import io.github.closeddev.Main;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -21,7 +20,7 @@ import static io.github.closeddev.Main.MCSBPath;
 
 public class CreateServer {
 
-    public static final String SERVERPATH = MCSBPath + "/Temp/testserver";
+    public static final String SERVERPATH = MCSBPath + "/Temp/Testserver";
     public static void createServer(String FullVersion, String Build, String vcode, int ramAmount) {
         try {
             Main.makeDir(SERVERPATH);
@@ -29,9 +28,9 @@ public class CreateServer {
             File verjson = new File(MCSBPath + "/versions.json");
             if (!verjson.isFile()) { // version.json 파일이 없을 경우 기본 파일 생성
                 JSONObject jsonObject = new JSONObject();
-                JSONObject asdf = new JSONObject(); // 이거슨 아무 의미도 없는 JSONObject 이름 원하시면 바꾸시오
-                asdf.put("list", new ArrayList<String>());
-                jsonObject.put("vers", asdf);
+                JSONObject versionObj = new JSONObject(); // 이거슨 아무 의미도 없는 JSONObject 이름 원하시면 바꾸시오
+                versionObj.put("list", new ArrayList<String>());
+                jsonObject.put("vers", versionObj);
                 JSONManager.writeJSON(MCSBPath + "/versions.json", jsonObject);
             }
 
@@ -76,7 +75,7 @@ public class CreateServer {
             Logger.log(e.toString(), 1);
         }
     }
-    private static void crtstart(String svpath, float ramAmount) {
+    public static void crtstart(String svpath, float ramAmount) {
         File BatFile = new File(svpath + "/start.bat");
         try {
             FileWriter fw = new FileWriter(BatFile, true);
@@ -101,7 +100,7 @@ public class CreateServer {
         }
     }
 
-    public static void crtproper(JSONObject properties) {
+    private static void crtproper(JSONObject properties) {
         String configPath = Main.PROGRAM_PATH + "/server.properties";
         File config = new File(configPath);
         if (!config.isFile()) {
