@@ -25,4 +25,8 @@ public class LangManager {
         JSONObject used = (JSONObject) langData.get(lang);
         return used.get(key).toString();
     }
+
+    public static JSONObject getLangList() {
+        return (JSONObject) langData.get("langs");
+    }
 }

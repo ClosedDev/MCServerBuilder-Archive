@@ -42,8 +42,6 @@ public class Main {
 
         reloadSettings(); //설정 리로드
 
-        Language = (String) settings.get("Language");
-
         String LAST_VER = VersionManager.getVersionStr();
         Boolean IsUpdateFound = false;
         if ((Boolean) settings.get("AutoUpdateCheck")) {
@@ -118,6 +116,7 @@ public class Main {
             JSONObject langObj = (JSONObject) parser.parse(langStr.toString());
             JSONManager.writeJSON(MCSBPath + "/lang.json", langObj);
         }*/
+        Language = (String) settings.get("Language");
     }
 
     public static void makeDir(String path) throws InterruptedException {
