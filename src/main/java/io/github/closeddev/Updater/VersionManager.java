@@ -5,6 +5,7 @@ import io.github.closeddev.Logger;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -12,10 +13,15 @@ public class VersionManager {
 
     public static final String VER = "0.0.2";
 
-    public static String getVersionStr() throws IOException, InterruptedException {
+    public static String getVersionStr() {
         String temp = null;
         URLConnection connection = null;
-        URL url = new URL("https://pastebin.com/raw/uMGL35qR");
+        URL url = null;
+        try {
+            url = new URL("https://pastebin.com/raw/uMGL35qR");
+        } catch (MalformedURLException e) {
+            Logger.log(e.toString(), 1);
+        }
         try {
             connection = url.openConnection();
         } catch (Exception e) {
@@ -31,6 +37,8 @@ public class VersionManager {
             while ((line = in.readLine()) != null) {
                 temp = line;
             }
+        } catch (Exception e) {
+            Logger.log(e.toString(), 1);
         }
         return temp;
     }

@@ -28,7 +28,7 @@ public class Main {
 
     public static JSONObject settings;
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         PROGRAM_JAR_PATH = Main.class.getProtectionDomain().getCodeSource().getLocation().getPath();
         File PP = new File(PROGRAM_JAR_PATH);
         PROGRAM_PATH = PP.getParent();
@@ -84,7 +84,7 @@ public class Main {
         MainMenu.startMenu();
     }
 
-    public static void reloadSettings() throws IOException, InterruptedException, ParseException {
+    public static void reloadSettings() {
         File setfile = new File(MCSBPath + "/setting.json");
         if (!setfile.isFile()) {
             JSONObject jsonObject = new JSONObject();
@@ -119,7 +119,7 @@ public class Main {
         Language = (String) settings.get("Language");
     }
 
-    public static void makeDir(String path) throws InterruptedException {
+    public static void makeDir(String path) {
         File d = new File(path);
 
         if(!d.isDirectory()){

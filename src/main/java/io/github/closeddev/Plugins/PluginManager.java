@@ -33,10 +33,6 @@ public class PluginManager {
     }
 
     public static void installPlugin(String path, String url, String filename) {
-        try {
-            Downloader.Download(url, path + "/Plugins/" + filename ,filename);
-        } catch (IOException e) {
-            Logger.log(e.toString(), 1);
-        }
+        Downloader.Download(url, path + "/Plugins/" + filename ,filename);
     }
 }

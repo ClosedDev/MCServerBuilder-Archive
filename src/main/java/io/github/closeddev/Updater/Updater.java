@@ -8,7 +8,7 @@ import java.io.*;
 import java.net.URL;
 
 public class Updater {
-    public static void updateMCSB(String programPath, String LAST_VER) throws IOException, InterruptedException {
+    public static void updateMCSB(String programPath, String LAST_VER) {
         System.out.println("Downloading MCSB Updater!");
         Main.makeDir(Main.MCSBPath + "/Temp");
 
@@ -39,24 +39,31 @@ public class Updater {
         } catch (IOException e) {
             Logger.log(e.toString(), 1);
         } finally {
-            if (in != null) {
-                in.close();
-            }
-            if (fout != null) {
-                fout.close();
+            try {
+                if (in != null) {
+                    in.close();
+                }
+                if (fout != null) {
+                    fout.close();
+                }
+            } catch (IOException e) {
+                Logger.log(e.toString(), 1);
             }
         }
         System.out.println("Starting MCSB Updater!");
         File BatFile = new File(Main.MCSBPath + "/Temp/Updater.bat");
-        FileWriter fw = new FileWriter(BatFile, true);
 
+        try {
+            FileWriter fw = new FileWriter(BatFile, true);
 
+            fw.write("@echo off\ntitle MCSBUpdater\njava -jar " + Main.MCSBPath + "/Bin/MCSBUpdater.jar " + Main.PROGRAM_JAR_PATH + " " + LAST_VER + "\npause\nexit");
+            fw.flush();
+            fw.close();
 
-        fw.write("@echo off\ntitle MCSBUpdater\njava -jar " + Main.MCSBPath + "/Bin/MCSBUpdater.jar " + Main.PROGRAM_JAR_PATH + " " + LAST_VER + "\npause\nexit");
-        fw.flush();
-        fw.close();
-
-        Runtime.getRuntime().exec("cmd /c start " + Main.MCSBPath + "/Temp/Updater.bat");
+            Runtime.getRuntime().exec("cmd /c start " + Main.MCSBPath + "/Temp/Updater.bat");
+        } catch (IOException e) {
+            Logger.log(e.toString(), 1);
+        }
 
         System.exit(0);
     }

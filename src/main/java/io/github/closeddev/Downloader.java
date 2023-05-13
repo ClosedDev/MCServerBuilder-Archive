@@ -12,33 +12,37 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public class Downloader {
-    public static void Download(String fileUrl, String saveAt, String filePresentName) throws IOException, MalformedURLException {
+    public static void Download(String fileUrl, String saveAt, String filePresentName) {
 
-        URL url = new URL(fileUrl);
-        HttpURLConnection httpConnection = (HttpURLConnection) (url.openConnection());
-        long completeFileSize = httpConnection.getContentLength();
+        try {
+            URL url = new URL(fileUrl);
+            HttpURLConnection httpConnection = (HttpURLConnection) (url.openConnection());
+            long completeFileSize = httpConnection.getContentLength();
 
-        try(InputStream inputStream = url.openStream();
-            CountingInputStream cis = new CountingInputStream(inputStream);
-            FileOutputStream fileOS = new FileOutputStream(saveAt);
-            ProgressBar pb = new ProgressBar(filePresentName, Math.floorDiv(completeFileSize, 1000)
-            )) {
+            try(InputStream inputStream = url.openStream();
+                CountingInputStream cis = new CountingInputStream(inputStream);
+                FileOutputStream fileOS = new FileOutputStream(saveAt);
+                ProgressBar pb = new ProgressBar(filePresentName, Math.floorDiv(completeFileSize, 1000)
+                )) {
 
-            pb.setExtraMessage("Downloading...");
+                pb.setExtraMessage("Downloading...");
 
-            new Thread(() -> {
-                try {
-                    IOUtils.copyLarge(cis, fileOS);
-                } catch (IOException e) {
-                    Logger.log(e.toString(), 1);
+                new Thread(() -> {
+                    try {
+                        IOUtils.copyLarge(cis, fileOS);
+                    } catch (IOException e) {
+                        Logger.log(e.toString(), 1);
+                    }
+                }).start();
+
+                while (cis.getByteCount() < completeFileSize) {
+                    pb.stepTo(Math.floorDiv(cis.getByteCount(), 1000));
                 }
-            }).start();
 
-            while (cis.getByteCount() < completeFileSize) {
                 pb.stepTo(Math.floorDiv(cis.getByteCount(), 1000));
+            } catch (Exception e) {
+                Logger.log(e.toString(), 1);
             }
-
-            pb.stepTo(Math.floorDiv(cis.getByteCount(), 1000));
         } catch (Exception e) {
             Logger.log(e.toString(), 1);
         }

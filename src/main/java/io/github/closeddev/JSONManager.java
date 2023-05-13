@@ -18,10 +18,14 @@ public class JSONManager {
         return jsonObject;
     }
 
-    public static void writeJSON(String filepath, JSONObject jsonObject) throws IOException {
-        FileWriter savefile = new FileWriter(filepath);
-        savefile.write(jsonObject.toJSONString());
-        savefile.flush();
-        savefile.close();
+    public static void writeJSON(String filepath, JSONObject jsonObject) {
+        try {
+            FileWriter savefile = new FileWriter(filepath);
+            savefile.write(jsonObject.toJSONString());
+            savefile.flush();
+            savefile.close();
+        } catch (IOException e) {
+            Logger.log(e.toString(), 1);
+        }
     }
 }

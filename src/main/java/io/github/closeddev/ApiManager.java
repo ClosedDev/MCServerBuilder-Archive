@@ -17,7 +17,7 @@ public class ApiManager {
     private static List<String> majorArray;
     private static List<String> fullArray;
 
-    private static void reloadListVars() throws IOException, ParseException {
+    private static void reloadListVars() {
         try {
             // API 엔드포인트 URL 설정
             URL url = new URL("https://api.papermc.io/v2/projects/paper");
@@ -47,16 +47,16 @@ public class ApiManager {
         }
     }
 
-    public static List<String> getFullArray() throws IOException, ParseException {
+    public static List<String> getFullArray() {
         reloadListVars();
         return fullArray;
     }
-    public static List<String> getMajorArray() throws IOException, ParseException {
+    public static List<String> getMajorArray() {
         reloadListVars();
         return majorArray;
     }
 
-    public static String getLatestBuild(String FullVersion) throws IOException, ParseException {
+    public static String getLatestBuild(String FullVersion) {
         String bcode = null;
         try {
             // API 엔드포인트 URL 설정
