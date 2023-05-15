@@ -1,19 +1,16 @@
 package io.github.closeddev;
 
+import io.github.closeddev.Menu.CreateServerMenu;
 import io.github.closeddev.Menu.MainMenu;
-import io.github.closeddev.Plugins.PluginManager;
-import io.github.closeddev.Server.CreateServer;
 import io.github.closeddev.Server.ServerManager;
 import io.github.closeddev.Updater.Updater;
 import io.github.closeddev.Updater.VersionManager;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
@@ -60,7 +57,7 @@ public class Main {
 
         if((Boolean) settings.get("DebugMode")) {
             Logger.log("Debug Mode is Enabled!", 2);
-            String FullVersion = "1.19.4";
+            /*String FullVersion = "1.19.4";
 
             Logger.log(ApiManager.getLatestBuild(FullVersion), 0);
 
@@ -77,7 +74,8 @@ public class Main {
             }
 
             Logger.log(String.valueOf(vcode), 0);
-            CreateServer.createServer(FullVersion, bcode, vcode, 4);
+            CreateServer.createServer(FullVersion, bcode, vcode, 4);*/
+
         }
 //        Logger.log(LangManager.getText("test", "ko-kr"), 0); // 언어매니저 테스트
         Logger.log("Entering MainMenu...", 0);
@@ -97,25 +95,28 @@ public class Main {
         }
         settings = JSONManager.loadJSON(MCSBPath + "/setting.json");
 
-        /*File langfile = new File(MCSBPath + "/lang.json");
+        File langfile = new File(MCSBPath + "/lang.json");
         if (!langfile.isFile()) {
-            StringBuilder langStr = new StringBuilder();
-            URL url = new URL("https://pastebin.com/raw/bDgywSwi");
-            URLConnection connection = url.openConnection();
+            try {
+                StringBuilder langStr = new StringBuilder();
+                URL url = new URL("https://pastebin.com/raw/bDgywSwi");
+                URLConnection connection = url.openConnection();
 
 
-            try (BufferedReader in = new BufferedReader(
-                    new InputStreamReader(connection.getInputStream())))
-            {
-                String line;
-                while ((line = in.readLine()) != null) {
-                    langStr.append(line);
+                try (BufferedReader in = new BufferedReader(
+                        new InputStreamReader(connection.getInputStream()))) {
+                    String line;
+                    while ((line = in.readLine()) != null) {
+                        langStr.append(line);
+                    }
                 }
+                JSONParser parser = new JSONParser();
+                JSONObject langObj = (JSONObject) parser.parse(langStr.toString());
+                JSONManager.writeJSON(MCSBPath + "/lang.json", langObj);
+            } catch (Exception e) {
+                Logger.log(e.toString(), 1);
             }
-            JSONParser parser = new JSONParser();
-            JSONObject langObj = (JSONObject) parser.parse(langStr.toString());
-            JSONManager.writeJSON(MCSBPath + "/lang.json", langObj);
-        }*/
+        }
         Language = (String) settings.get("Language");
     }
 

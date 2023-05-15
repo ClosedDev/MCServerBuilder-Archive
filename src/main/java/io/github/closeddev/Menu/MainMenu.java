@@ -7,7 +7,6 @@ import io.github.closeddev.Main;
 import io.github.closeddev.Updater.VersionManager;
 import org.json.simple.JSONObject;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
 

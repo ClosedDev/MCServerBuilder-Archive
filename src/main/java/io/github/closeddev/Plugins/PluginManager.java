@@ -1,11 +1,9 @@
 package io.github.closeddev.Plugins;
 
 import io.github.closeddev.Downloader;
-import io.github.closeddev.Logger;
 import io.github.closeddev.Server.ServerManager;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 

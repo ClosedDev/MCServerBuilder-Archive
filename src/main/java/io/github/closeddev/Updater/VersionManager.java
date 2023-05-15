@@ -3,7 +3,6 @@ package io.github.closeddev.Updater;
 import io.github.closeddev.Logger;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -11,7 +10,7 @@ import java.net.URLConnection;
 
 public class VersionManager {
 
-    public static final String VER = "0.0.2";
+    public static final String VER = "0.0.3";
 
     public static String getVersionStr() {
         String temp = null;
