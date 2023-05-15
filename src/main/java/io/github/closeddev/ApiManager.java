@@ -3,13 +3,10 @@ package io.github.closeddev;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.util.List;
 
@@ -17,7 +14,7 @@ public class ApiManager {
     private static List<String> majorArray;
     private static List<String> fullArray;
 
-    private static void reloadListVars() throws IOException, ParseException {
+    private static void reloadListVars() {
         try {
             // API 엔드포인트 URL 설정
             URL url = new URL("https://api.papermc.io/v2/projects/paper");
@@ -43,20 +40,20 @@ public class ApiManager {
                 fullArray = (List<String>) jsonObject.get("versions");
             }
         } catch (Exception e) {
-            throw e;
+            Logger.log(e.toString(), 1);
         }
     }
 
-    public static List<String> getFullArray() throws IOException, ParseException {
+    public static List<String> getFullArray() {
         reloadListVars();
         return fullArray;
     }
-    public static List<String> getMajorArray() throws IOException, ParseException {
+    public static List<String> getMajorArray() {
         reloadListVars();
         return majorArray;
     }
 
-    public static String getLatestBuild(String FullVersion) throws IOException, ParseException {
+    public static String getLatestBuild(String FullVersion) {
         String bcode = null;
         try {
             // API 엔드포인트 URL 설정
@@ -86,7 +83,7 @@ public class ApiManager {
                 bcode = lastBuild.toString();
             }
         } catch (Exception e) {
-            throw e;
+            Logger.log(e.toString(), 1);
         }
         return bcode;
     }

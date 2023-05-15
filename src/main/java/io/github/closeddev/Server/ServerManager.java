@@ -1,5 +1,6 @@
 package io.github.closeddev.Server;
 
+import io.github.closeddev.Logger;
 import io.github.closeddev.Main;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
@@ -8,7 +9,7 @@ import java.io.File;
 
 public class ServerManager {
     public static boolean isServerSet() {
-        File f = new File(Main.PROGRAM_PATH + "world");
+        File f = new File(Main.PROGRAM_PATH + "/world");
         return f.isDirectory();
     }
 
@@ -18,7 +19,7 @@ public class ServerManager {
             conf.setProperty(key, value);
             conf.save();
         } catch (ConfigurationException e) {
-            throw new RuntimeException(e);
+            Logger.log(e.toString(), 1);
         }
     }
 }

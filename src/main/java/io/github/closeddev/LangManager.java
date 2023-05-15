@@ -17,12 +17,16 @@ public class LangManager {
             langData = (JSONObject) parser.parse(reader);
             reader.close();
         } catch (IOException | ParseException e) {
-            e.printStackTrace();
+            Logger.log(e.toString(), 1);
         }
     }
 
     public static String getText(String key, String lang) {
         JSONObject used = (JSONObject) langData.get(lang);
         return used.get(key).toString();
+    }
+
+    public static JSONObject getLangList() {
+        return (JSONObject) langData.get("langs");
     }
 }
