@@ -1,5 +1,7 @@
 package io.github.closeddev;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -11,6 +13,8 @@ import java.net.URL;
 import java.util.List;
 
 public class ApiManager {
+    static Logger logger = LogManager.getLogger(ApiManager.class);
+
     private static List<String> majorArray;
     private static List<String> fullArray;
 
@@ -40,7 +44,7 @@ public class ApiManager {
                 fullArray = (List<String>) jsonObject.get("versions");
             }
         } catch (Exception e) {
-            Logger.log(e.toString(), 1);
+            CrashReporter.fatal(e.toString(), logger);
         }
     }
 
@@ -83,7 +87,7 @@ public class ApiManager {
                 bcode = lastBuild.toString();
             }
         } catch (Exception e) {
-            Logger.log(e.toString(), 1);
+            CrashReporter.fatal(e.toString(), logger);
         }
         return bcode;
     }

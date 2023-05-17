@@ -1,49 +1,44 @@
 package io.github.closeddev;
 
-import me.tongfei.progressbar.ProgressBar;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.io.input.CountingInputStream;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class Downloader {
-    public static void Download(String fileUrl, String saveAt, String filePresentName) {
+    static Logger logger = LogManager.getLogger(Main.class);
+    public static void Download(String fileUrl, String saveAt) {
+        File file = new File(saveAt);
+        if(file.exists()){
+            file.delete();
+        }
 
+        BufferedInputStream in = null;
+        FileOutputStream fout = null;
         try {
-            URL url = new URL(fileUrl);
-            HttpURLConnection httpConnection = (HttpURLConnection) (url.openConnection());
-            long completeFileSize = httpConnection.getContentLength();
+            in = new BufferedInputStream(new URL(fileUrl).openStream());
+            fout = new FileOutputStream(saveAt);
 
-            try(InputStream inputStream = url.openStream();
-                CountingInputStream cis = new CountingInputStream(inputStream);
-                FileOutputStream fileOS = new FileOutputStream(saveAt);
-                ProgressBar pb = new ProgressBar(filePresentName, Math.floorDiv(completeFileSize, 1000)
-                )) {
-
-                pb.setExtraMessage("Downloading...");
-
-                new Thread(() -> {
-                    try {
-                        IOUtils.copyLarge(cis, fileOS);
-                    } catch (IOException e) {
-                        Logger.log(e.toString(), 1);
-                    }
-                }).start();
-
-                while (cis.getByteCount() < completeFileSize) {
-                    pb.stepTo(Math.floorDiv(cis.getByteCount(), 1000));
-                }
-
-                pb.stepTo(Math.floorDiv(cis.getByteCount(), 1000));
-            } catch (Exception e) {
-                Logger.log(e.toString(), 1);
+            final byte data[] = new byte[1024];
+            int count;
+            while ((count = in.read(data, 0, 1024)) != -1) {
+                fout.write(data, 0, count);
             }
-        } catch (Exception e) {
-            Logger.log(e.toString(), 1);
+        } catch (IOException e) {
+            CrashReporter.fatal(e.toString(), logger);
+        } finally {
+            try {
+                if (in != null) {
+                    in.close();
+                }
+                if (fout != null) {
+                    fout.close();
+                }
+            } catch (IOException e) {
+                CrashReporter.fatal(e.toString(), logger);
+            }
         }
     }
 }

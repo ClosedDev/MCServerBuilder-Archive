@@ -1,13 +1,17 @@
 package io.github.closeddev.Server;
 
-import io.github.closeddev.Logger;
+import io.github.closeddev.CrashReporter;
 import io.github.closeddev.Main;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 
 public class ServerManager {
+    static Logger logger = LogManager.getLogger(ServerManager.class);
+
     public static boolean isServerSet() {
         File f = new File(Main.PROGRAM_PATH + "/world");
         return f.isDirectory();
@@ -19,7 +23,7 @@ public class ServerManager {
             conf.setProperty(key, value);
             conf.save();
         } catch (ConfigurationException e) {
-            Logger.log(e.toString(), 1);
+            CrashReporter.fatal(e.toString(), logger);
         }
     }
 }
