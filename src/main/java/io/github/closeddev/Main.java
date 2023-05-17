@@ -1,11 +1,14 @@
 package io.github.closeddev;
 
+import io.github.closeddev.GUI.StartGUI;
 import io.github.closeddev.Menu.CreateServerMenu;
 import io.github.closeddev.Menu.MainMenu;
 import io.github.closeddev.Server.ServerManager;
 import io.github.closeddev.Updater.Updater;
 import io.github.closeddev.Updater.VersionManager;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
@@ -17,6 +20,8 @@ import java.net.URLConnection;
 import java.util.List;
 
 public class Main {
+    static Logger logger = LogManager.getLogger(Main.class);
+
     public static final String appdata = System.getenv("APPDATA");
     public static final String MCSBPath = appdata + "/MCServerBuilder";
     public static List<String> jarFiles;
@@ -44,41 +49,29 @@ public class Main {
         if ((Boolean) settings.get("AutoUpdateCheck")) {
             IsUpdateFound = VersionManager.checkUpdate(LAST_VER);
         }
-        Logger.log("MCSB v" + VersionManager.VER + " Copyright \u24d2 ClosedDev ( MIT LICENCE v2 )", 0);
-        Logger.log("Starting MCSB...", 0);
+        logger.info("MCSB v" + VersionManager.VER + " Copyright \u24d2 ClosedDev ( MIT LICENCE v2 )");
+        logger.info("Starting MCSB...");
+
+        // 초기화
+        logger.info("Initializing: temp folder");
+
+        deleteDir(MCSBPath + "/Temp");
 
         if(IsUpdateFound) {
-            Logger.log("New Update Found! v" + VersionManager.VER + " -> v" + LAST_VER, 2);
+            logger.warn("New Update Found! v" + VersionManager.VER + " -> v" + LAST_VER);
             if ((Boolean) settings.get("AutoFileUpdate")) {
-                Logger.log("Updating MCSB...", 2);
+                logger.info("Updating MCSB...");
                 Updater.updateMCSB(PROGRAM_JAR_PATH, LAST_VER);
             }
         }
 
-        if((Boolean) settings.get("DebugMode")) {
-            Logger.log("Debug Mode is Enabled!", 2);
-            /*String FullVersion = "1.19.4";
+        if(!(Boolean) settings.get("DebugMode")) {
+            logger.warn("Debug Mode is Enabled!");
 
-            Logger.log(ApiManager.getLatestBuild(FullVersion), 0);
-
-            String bcode = ApiManager.getLatestBuild(FullVersion);
-            int vcodeint = Integer.parseInt(FullVersion.replaceAll("\\.", ""));
-            String vcode = null;
-
-            if(countChar(FullVersion, '.')<2) vcode = String.valueOf(vcodeint * 10);
-
-            if(vcodeint>1000) {
-                vcode = String.valueOf(vcodeint - 1000);
-            } else {
-                vcode = "0" + String.valueOf(vcodeint - 100);
-            }
-
-            Logger.log(String.valueOf(vcode), 0);
-            CreateServer.createServer(FullVersion, bcode, vcode, 4);*/
-
+            CreateServerMenu.setServer();
+            StartGUI.start("Main");
         }
-//        Logger.log(LangManager.getText("test", "ko-kr"), 0); // 언어매니저 테스트
-        Logger.log("Entering MainMenu...", 0);
+        logger.info("Entering MainMenu...");
         MainMenu.startMenu();
     }
 
@@ -114,7 +107,7 @@ public class Main {
                 JSONObject langObj = (JSONObject) parser.parse(langStr.toString());
                 JSONManager.writeJSON(MCSBPath + "/lang.json", langObj);
             } catch (Exception e) {
-                Logger.log(e.toString(), 1);
+                CrashReporter.fatal(e.toString(), logger);
             }
         }
         Language = (String) settings.get("Language");
@@ -125,12 +118,34 @@ public class Main {
 
         if(!d.isDirectory()){
             if(!d.mkdirs()){
-                Logger.log("An error occurred while creating the folder.", 1);
+                CrashReporter.fatal("An error occurred while creating the folder.", logger);
             }
         }
     }
 
-    private static long countChar(String str, char ch) {
+    public static void deleteDir(String path) {
+
+        File folder = new File(path);
+        try {
+            if(folder.exists()){
+                File[] folder_list = folder.listFiles(); //파일리스트 얻어오기
+
+                for (int i = 0; i < folder_list.length; i++) {
+                    if(folder_list[i].isFile()) {
+                        folder_list[i].delete();
+                    }else {
+                        deleteDir(folder_list[i].getPath()); //재귀함수호출
+                    }
+                    folder_list[i].delete();
+                }
+                folder.delete(); //폴더 삭제
+            }
+        } catch (Exception e) {
+            CrashReporter.fatal("Failed to init!", logger);
+        }
+    }
+
+    public static long countChar(String str, char ch) {
         return str.chars()
                 .filter(c -> c == ch)
                 .count();

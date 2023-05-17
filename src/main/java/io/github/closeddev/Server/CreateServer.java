@@ -1,9 +1,11 @@
 package io.github.closeddev.Server;
 
+import io.github.closeddev.CrashReporter;
 import io.github.closeddev.Downloader;
 import io.github.closeddev.JSONManager;
-import io.github.closeddev.Logger;
 import io.github.closeddev.Main;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -21,13 +23,18 @@ import java.util.Map;
 import static io.github.closeddev.Main.MCSBPath;
 
 public class CreateServer {
+    static Logger logger = LogManager.getLogger(CreateServer.class);
 
     public static HashMap<String, Object> PROPERTIES = new HashMap<>();
 
-    public static final String SERVERPATH = MCSBPath + "/Temp/Testserver";
-    public static void createServer(String FullVersion, String Build, String vcode, int ramAmount) {
+    public static final String TEMPPATH = MCSBPath + "/Temp";
+
+    public static final String TEMPSVPATH = MCSBPath + "/Temp/server";
+    public static void createServer(String FullVersion, String Build, String vcode, int ramAmount, String serverName) {
         try {
-            Main.makeDir(SERVERPATH);
+            String SERVERPATH = MCSBPath + "/" + serverName; //임시
+
+            Main.makeDir(TEMPSVPATH);
 
             File verjson = new File(MCSBPath + "/versions.json");
             if (!verjson.isFile()) { // version.json 파일이 없을 경우 기본 파일 생성
@@ -53,16 +60,16 @@ public class CreateServer {
                     String delfilename = (String) ver.get("jar");
                     File delfile = new File(delfilename);
                     if (!delfile.delete()) {
-                        Logger.log("Failed to delete " + delfilename, 1);
+                        CrashReporter.fatal("Invalid Type", logger);
                     }
                     ver.put("build", Build);
                     filename = Paths.get(MCSBPath + "/Jars/P" + vcode + "-" + Build + ".jar");
-                    Downloader.Download(paperurl, String.valueOf(filename), "Papermc server"); // Jars 폴더에 버킷 저장
+                    Downloader.Download(paperurl, String.valueOf(filename)); // Jars 폴더에 버킷 저장
                     ver.put("jar", String.valueOf(filename));
                 }
             } else {
                 filename = Paths.get(MCSBPath + "/Jars/P" + vcode + "-" + Build + ".jar");
-                Downloader.Download(paperurl, String.valueOf(filename), "Papermc server"); // Jars 폴더에 버킷 저장
+                Downloader.Download(paperurl, String.valueOf(filename)); // Jars 폴더에 버킷 저장
                 versionList.add(FullVersion); // JSON에 버전 삽입
                 JSONObject versionfield = new JSONObject();
                 versionfield.put("build", Build);
@@ -70,40 +77,41 @@ public class CreateServer {
                 vers.put(FullVersion, versionfield);
             }
             JSONManager.writeJSON(MCSBPath + "/versions.json", jsonObject);
-            if (!Paths.get(SERVERPATH + "/paper.jar").toFile().exists()) Files.copy(filename, Paths.get(SERVERPATH + "/paper.jar"));
-            crteula(SERVERPATH);
-            crtstart(SERVERPATH, ramAmount);
+            if (!Paths.get(TEMPSVPATH + "/paper.jar").toFile().exists()) Files.copy(filename, Paths.get(TEMPSVPATH + "/paper.jar"));
+            crteula(TEMPSVPATH);
+            crtstart(TEMPSVPATH, ramAmount);
             crtproper();
-            Files.copy(Paths.get((MCSBPath + "/server.properties")), Paths.get(SERVERPATH + "/server.properties"));
+            Files.copy(Paths.get((MCSBPath + "/server.properties")), Paths.get(TEMPSVPATH + "/server.properties"));
 
+            Files.move(Paths.get(TEMPSVPATH), Paths.get(SERVERPATH));
 
+            Files.delete(Paths.get(TEMPPATH));
 
         } catch(Exception e) {
-            Logger.log(e.toString(), 1);
+            CrashReporter.fatal(e.toString(), logger);
         }
     }
-    public static void crtstart(String svpath, float ramAmount) {
+    public static void crtstart(String svpath, int ramAmount) {
         File BatFile = new File(svpath + "/start.bat");
         try {
             FileWriter fw = new FileWriter(BatFile, true);
             fw.write("@echo off\njava -" + "Xms" + ramAmount + "G -Xmx" + ramAmount + "G -jar paper.jar\npause\nexit");
             fw.flush();
             fw.close();
-            System.out.println("@echo off\njava -" + "Xms" + ramAmount + "G -Xmx" + ramAmount + "G -jar paper.jar\npause\nexit");
         } catch (IOException e) {
-            Logger.log(e.toString(), 1);
+            CrashReporter.fatal(e.toString(), logger);
         }
     }
 
     private static void crteula(String svpath) {
-        File BatFile = new File(svpath + "eula.txt");
+        File BatFile = new File(svpath + "/eula.txt");
         try {
             FileWriter fw = new FileWriter(BatFile, true);
             fw.write("eula=true");
             fw.flush();
             fw.close();
         } catch (IOException e) {
-            Logger.log(e.toString(), 1);
+            CrashReporter.fatal(e.toString(), logger);
         }
     }
 
@@ -115,7 +123,7 @@ public class CreateServer {
             try {
                 config.createNewFile();
             } catch (IOException e) {
-                Logger.log("Failed to create server.properties File!", 1);
+                CrashReporter.fatal("Failed to create server.properties File!", logger);
             }
         }
 
@@ -144,7 +152,7 @@ public class CreateServer {
         PROPERTIES.put("white-list", false);
         PROPERTIES.put("spawn-npcs", true);
         PROPERTIES.put("spawn-animals", true);
-        PROPERTIES.put("level-type", "minecraft\\:default");
+        PROPERTIES.put("level-type", "normal");
         PROPERTIES.put("spawn-monsters", true);
         PROPERTIES.put("spawn-protection", 16);
     }

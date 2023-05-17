@@ -1,13 +1,17 @@
 package io.github.closeddev.Updater;
 
-import io.github.closeddev.Logger;
+import io.github.closeddev.CrashReporter;
 import io.github.closeddev.Main;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 import java.io.*;
 import java.net.URL;
 
 public class Updater {
+    static Logger logger = LogManager.getLogger(Updater.class);
+
     public static void updateMCSB(String programPath, String LAST_VER) {
         System.out.println("Downloading MCSB Updater!");
         Main.makeDir(Main.MCSBPath + "/Temp");
@@ -37,7 +41,7 @@ public class Updater {
                 fout.write(data, 0, count);
             }
         } catch (IOException e) {
-            Logger.log(e.toString(), 1);
+            CrashReporter.fatal(e.toString(), logger);
         } finally {
             try {
                 if (in != null) {
@@ -47,7 +51,7 @@ public class Updater {
                     fout.close();
                 }
             } catch (IOException e) {
-                Logger.log(e.toString(), 1);
+                CrashReporter.fatal(e.toString(), logger);
             }
         }
         System.out.println("Starting MCSB Updater!");
@@ -62,7 +66,7 @@ public class Updater {
 
             Runtime.getRuntime().exec("cmd /c start " + Main.MCSBPath + "/Temp/Updater.bat");
         } catch (IOException e) {
-            Logger.log(e.toString(), 1);
+            CrashReporter.fatal(e.toString(), logger);
         }
 
         System.exit(0);

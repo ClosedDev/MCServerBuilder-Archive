@@ -31,6 +31,6 @@ public class PluginManager {
     }
 
     public static void installPlugin(String path, String url, String filename) {
-        Downloader.Download(url, path + "/Plugins/" + filename ,filename);
+        Downloader.Download(url, path + "/Plugins/" + filename);
     }
 }

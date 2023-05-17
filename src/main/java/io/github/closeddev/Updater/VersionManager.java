@@ -1,6 +1,8 @@
 package io.github.closeddev.Updater;
 
-import io.github.closeddev.Logger;
+import io.github.closeddev.CrashReporter;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -9,8 +11,9 @@ import java.net.URL;
 import java.net.URLConnection;
 
 public class VersionManager {
+    static Logger logger = LogManager.getLogger(VersionManager.class);
 
-    public static final String VER = "0.0.2";
+    public static final String VER = "0.0.3";
 
     public static String getVersionStr() {
         String temp = null;
@@ -19,12 +22,12 @@ public class VersionManager {
         try {
             url = new URL("https://pastebin.com/raw/uMGL35qR");
         } catch (MalformedURLException e) {
-            Logger.log(e.toString(), 1);
+            CrashReporter.fatal(e.toString(), logger);
         }
         try {
             connection = url.openConnection();
         } catch (Exception e) {
-            Logger.log(e.toString(), 1);
+            CrashReporter.fatal(e.toString(), logger);
         }
 
 
@@ -37,7 +40,7 @@ public class VersionManager {
                 temp = line;
             }
         } catch (Exception e) {
-            Logger.log(e.toString(), 1);
+            CrashReporter.fatal(e.toString(), logger);
         }
         return temp;
     }

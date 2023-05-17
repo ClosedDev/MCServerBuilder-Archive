@@ -1,16 +1,20 @@
 package io.github.closeddev.Menu;
 
+import io.github.closeddev.CrashReporter;
 import io.github.closeddev.JSONManager;
 import io.github.closeddev.LangManager;
-import io.github.closeddev.Logger;
 import io.github.closeddev.Main;
 import io.github.closeddev.Updater.VersionManager;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 
 import java.util.List;
 import java.util.Scanner;
 
 public class MainMenu {
+    static Logger logger = LogManager.getLogger(Main.class);
+
     public static void startMenu() {
         System.out.println(LangManager.getText("inMenu", Main.Language) + "\n");
         System.out.println(LangManager.getText("initial_1", Main.Language));
@@ -34,9 +38,9 @@ public class MainMenu {
             if (langList.contains(selectedLang)) {
                 break;
             }
-            System.out.println("존재하지 않는 언어입니다.");
+            System.out.println(LangManager.getText("main_1", Main.Language));
         }
-        System.out.println("선택한 언어를 적용 중입니다...");
+        System.out.println(LangManager.getText("main_2", Main.Language));
 
         JSONObject setJson = JSONManager.loadJSON(Main.MCSBPath + "/setting.json");
         setJson.put("Language", selectedLang);
@@ -44,7 +48,7 @@ public class MainMenu {
             JSONManager.writeJSON(Main.MCSBPath + "/setting.json", setJson);
             Main.reloadSettings();
         } catch (Exception e) {
-            Logger.log(e.toString(), 1);
+            CrashReporter.fatal(e.toString(), logger);
         }
 
         System.out.println("\n\n    MCSB v" + VersionManager.VER);
